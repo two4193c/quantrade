@@ -8,13 +8,15 @@ interface DashboardTabProps {
   backtestData: BacktestResult | null;
   onNavigateToLab: () => void;
   onNavigateToData: () => void;
+  onNavigateToMacro?: () => void;
 }
 
 export const DashboardTab: React.FC<DashboardTabProps> = ({
   paperSummary,
   backtestData,
   onNavigateToLab,
-  onNavigateToData
+  onNavigateToData,
+  onNavigateToMacro
 }) => {
   const equity = paperSummary?.summary.totalEquityGbp || 108450;
   const pnl = paperSummary?.summary.totalPnlGbp || 8450;
@@ -46,6 +48,14 @@ export const DashboardTab: React.FC<DashboardTabProps> = ({
           </div>
         </div>
         <div className="flex items-center space-x-2 w-full md:w-auto justify-end">
+          {onNavigateToMacro && (
+            <button
+              onClick={onNavigateToMacro}
+              className="px-3 py-1.5 text-xs rounded-lg bg-indigo-950/60 hover:bg-indigo-900/80 text-indigo-300 border border-indigo-700/50 transition font-mono"
+            >
+              Macro & Alt Data
+            </button>
+          )}
           <button
             onClick={onNavigateToData}
             className="px-3 py-1.5 text-xs rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition"

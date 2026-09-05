@@ -155,3 +155,107 @@ export interface PaperSummary {
   positions: PaperPosition[];
   orders: PaperOrder[];
 }
+
+export interface FredMacroIndicator {
+  id: string;
+  name: string;
+  fred_series: string;
+  value: number;
+  change_1m: number;
+  unit: string;
+  regime_signal: string;
+  description: string;
+}
+
+export interface FredMacroResponse {
+  source: string;
+  last_updated: string;
+  overall_macro_score: number;
+  macro_bias: string;
+  indicators: FredMacroIndicator[];
+  history: {
+    date: string;
+    uk10y: number;
+    boeRate: number;
+    us10y: number;
+    vix: number;
+  }[];
+}
+
+export interface OnsCpihResponse {
+  source: string;
+  series_id: string;
+  metric: string;
+  latest_month: string;
+  headline_cpih_pct: number;
+  previous_cpih_pct: number;
+  core_cpih_pct: number;
+  owner_occupier_housing_pct: number;
+  boe_target_pct: number;
+  target_deviation_pct: number;
+  status: string;
+  impact_on_ftse: string;
+  series_history: {
+    period: string;
+    cpih: number;
+    core: number;
+    target: number;
+  }[];
+}
+
+export interface FcaShortDisclosure {
+  ticker: string;
+  name: string;
+  sector: string;
+  disclosed_short_pct: number;
+  number_of_funds: number;
+  leading_fund: string;
+  change_30d: number;
+  squeeze_risk_score: number;
+  status: string;
+}
+
+export interface FcaShortRegisterResponse {
+  source: string;
+  threshold: string;
+  date: string;
+  total_ftse_shorted_capital_gbp_bn: number;
+  disclosures: FcaShortDisclosure[];
+}
+
+export interface QuandlCommodity {
+  symbol: string;
+  name: string;
+  quandl_code: string;
+  price: number;
+  change_pct: number;
+  currency: string;
+  ftse_impact_sector: string;
+  correlation: number;
+}
+
+export interface QuandlCommodityResponse {
+  source: string;
+  last_updated: string;
+  energy_momentum_index: number;
+  commodities: QuandlCommodity[];
+}
+
+export interface AdrImpliedOpenItem {
+  ftse_ticker: string;
+  name: string;
+  adr_ticker: string;
+  adr_ratio: number;
+  adr_close_usd: number;
+  prev_lse_close_gbx: number;
+  implied_lse_open_gbx: number;
+  predicted_gap_pct: number;
+  signal: "BULLISH_GAP" | "BEARISH_GAP" | "NEUTRAL_OPEN";
+}
+
+export interface AdrImpliedOpenResponse {
+  market: string;
+  fx_rate_gbp_usd: number;
+  calculated_at: string;
+  adrs: AdrImpliedOpenItem[];
+}

@@ -1,5 +1,5 @@
 import React from "react";
-import { Activity, Cpu, Database, ShieldAlert, LineChart, Terminal, TrendingUp, Layers } from "lucide-react";
+import { Activity, Cpu, Database, ShieldAlert, LineChart, Terminal, TrendingUp, Layers, Globe } from "lucide-react";
 
 interface NavbarProps {
   activeTab: string;
@@ -12,6 +12,7 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab, circuit
     { id: "dashboard", label: "Dashboard", icon: LineChart },
     { id: "strategy_lab", label: "Strategy Lab", icon: Cpu },
     { id: "data_explorer", label: "Data & Features", icon: Database },
+    { id: "macro_alt", label: "Macro & Alt Data", icon: Globe },
     { id: "projections", label: "Forecast Cone & Meta", icon: TrendingUp },
     { id: "paper_trading", label: "Paper Trading", icon: Activity },
     { id: "docker", label: "Docker & Cloud Run", icon: Layers }

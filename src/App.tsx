@@ -6,6 +6,7 @@ import { DataExplorerTab } from "./components/DataExplorerTab";
 import { ProjectionsTab } from "./components/ProjectionsTab";
 import { PaperTradingTab } from "./components/PaperTradingTab";
 import { DockerArchitectureTab } from "./components/DockerArchitectureTab";
+import { MacroAlternativeDataTab } from "./components/MacroAlternativeDataTab";
 import { UniverseConstituent, FeatureResponse, BacktestResult, ForecastResponse, PaperSummary } from "./types";
 
 export default function App() {
@@ -224,6 +225,7 @@ export default function App() {
             backtestData={backtestResult}
             onNavigateToLab={() => setActiveTab("strategy_lab")}
             onNavigateToData={() => setActiveTab("data_explorer")}
+            onNavigateToMacro={() => setActiveTab("macro_alt")}
           />
         )}
 
@@ -245,6 +247,10 @@ export default function App() {
             onTriggerIngestion={handleTriggerIngestion}
             loading={loading}
           />
+        )}
+
+        {activeTab === "macro_alt" && (
+          <MacroAlternativeDataTab />
         )}
 
         {activeTab === "projections" && (

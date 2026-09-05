@@ -11,7 +11,17 @@ import json
 import os
 
 from app.config import settings
-from app.modules.ingestion import YFinanceProvider, TiingoProvider, DataValidator, DuckDBStorageManager
+from app.modules.ingestion import (
+    YFinanceProvider,
+    TiingoProvider,
+    DataValidator,
+    DuckDBStorageManager,
+    FredMacroProvider,
+    OnsCpihProvider,
+    FcaShortRegisterProvider,
+    QuandlCommodityProvider,
+    AdrImpliedOpenCalculator
+)
 from app.modules.features import IndicatorEngine
 from app.modules.strategies import VectorizedBacktester
 from app.modules.continuous_learning import MetaLabelingVetoModel, MonteCarloProjectionEngine
@@ -36,6 +46,10 @@ app.add_middleware(
 storage_manager = DuckDBStorageManager(settings.STORAGE_PATH)
 paper_engine = PaperTradingEngine(initial_capital=10000000.0) # £100,000 in GBX pence
 data_provider = YFinanceProvider()
+fred_provider = FredMacroProvider(api_key=settings.FRED_API_KEY)
+ons_provider = OnsCpihProvider(api_key=settings.ONS_API_KEY)
+fca_provider = FcaShortRegisterProvider()
+quandl_provider = QuandlCommodityProvider(api_key=settings.QUANDL_API_KEY)
 
 # Load FTSE 100 Universe Configuration
 def get_universe_list():
@@ -216,3 +230,32 @@ def test_alert(req: AlertTestRequest):
         chat_id=settings.TELEGRAM_CHAT_ID,
         message=f"🚨 *QuantTrade Alert*\n{req.message}\nTicker: `{req.ticker}`"
     )
+
+# =====================================================================
+# MACRO & ALTERNATIVE DATA ENDPOINTS
+# =====================================================================
+
+@app.get("/api/macro/fred")
+def get_fred_macro():
+    """Returns FRED macroeconomic indicators (Gilts, SONIA, US 10Y, VIX, Yield Curve)"""
+    return fred_provider.get_macro_dashboard()
+
+@app.get("/api/macro/ons-cpih")
+def get_ons_cpih():
+    """Returns official ONS UK CPIH inflation rate and historic time series"""
+    return ons_provider.get_cpih_data()
+
+@app.get("/api/alternative/fca-shorts")
+def get_fca_shorts():
+    """Returns official FCA Net Short Position Register and hedge fund disclosures"""
+    return fca_provider.get_short_register()
+
+@app.get("/api/commodities/quandl")
+def get_quandl_commodities():
+    """Returns Quandl / ICE commodity benchmarks and FTSE sector beta"""
+    return quandl_provider.get_commodities()
+
+@app.get("/api/adr/implied-opens")
+def get_adr_implied_opens():
+    """Returns overnight US ADR implied London opening prices and gap predictions"""
+    return AdrImpliedOpenCalculator.calculate_implied_opens()
