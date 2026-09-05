@@ -1,0 +1,81 @@
+version: '3.8'
+
+services:
+  # Module 5 & 1-4: FastAPI Quantitative Backend Service
+  quant-backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: quanttrade-fastapi
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      - PORT=8000
+      - ENVIRONMENT=development
+      - STORAGE_PATH=/data/storage
+      - FEATURE_STORE_PATH=/data/features
+      - TIINGO_API_KEY=${TIINGO_API_KEY:-""}
+      - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN:-""}
+      - TELEGRAM_CHAT_ID=${TELEGRAM_CHAT_ID:-""}
+      - REDIS_URL=redis://redis:6379/0
+      - UK_STAMP_DUTY_RATE=0.005
+      - DEFAULT_UNIVERSE=FTSE100
+    volumes:
+      - quant-storage:/data/storage
+      - quant-features:/data/features
+      - ./backend:/app
+    depends_on:
+      - redis
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Module 5: React + Tailwind Frontend Service (Vite Dev / Nginx)
+  quant-frontend:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+    container_name: quanttrade-react
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - VITE_API_URL=http://localhost:8000
+    depends_on:
+      - quant-backend
+
+  # Redis for Background Job Queue (Long-running Optuna studies & walk-forward runs)
+  redis:
+    image: redis:7-alpine
+    container_name: quanttrade-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+
+  # Automated Daily Ingestion Scheduler (Simulating Google Cloud Scheduler locally)
+  quant-scheduler:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: quanttrade-scheduler
+    command: ["python", "-m", "app.scheduler"]
+    environment:
+      - BACKEND_API_URL=http://quant-backend:8000
+      - SCHEDULE_CRON=0 17 * * 1-5  # Mon-Fri 17:00 London close
+    depends_on:
+      - quant-backend
+    volumes:
+      - quant-storage:/data/storage
+
+volumes:
+  quant-storage:
+    name: quanttrade_duckdb_parquet
+  quant-features:
+    name: quanttrade_features
+  redis-data:
+    name: quanttrade_redis

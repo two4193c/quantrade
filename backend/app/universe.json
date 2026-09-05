@@ -1,0 +1,17 @@
+[
+  { "ticker": "AZN.L", "name": "AstraZeneca PLC", "sector": "Healthcare", "currency": "GBX", "weight": 8.45, "primary_exchange": "LSE" },
+  { "ticker": "SHEL.L", "name": "Shell plc", "sector": "Energy", "currency": "GBX", "weight": 8.12, "primary_exchange": "LSE" },
+  { "ticker": "HSBA.L", "name": "HSBC Holdings plc", "sector": "Financials", "currency": "GBX", "weight": 6.30, "primary_exchange": "LSE" },
+  { "ticker": "ULVR.L", "name": "Unilever PLC", "sector": "Consumer Staples", "currency": "GBX", "weight": 4.95, "primary_exchange": "LSE" },
+  { "ticker": "BP.L", "name": "BP p.l.c.", "sector": "Energy", "currency": "GBX", "weight": 3.85, "primary_exchange": "LSE" },
+  { "ticker": "GSK.L", "name": "GSK plc", "sector": "Healthcare", "currency": "GBX", "weight": 3.10, "primary_exchange": "LSE" },
+  { "ticker": "RIO.L", "name": "Rio Tinto plc", "sector": "Basic Materials", "currency": "GBX", "weight": 3.05, "primary_exchange": "LSE" },
+  { "ticker": "DGE.L", "name": "Diageo plc", "sector": "Consumer Staples", "currency": "GBX", "weight": 2.75, "primary_exchange": "LSE" },
+  { "ticker": "BATS.L", "name": "British American Tobacco", "sector": "Consumer Staples", "currency": "GBX", "weight": 2.65, "primary_exchange": "LSE" },
+  { "ticker": "REL.L", "name": "RELX PLC", "sector": "Industrials", "currency": "GBX", "weight": 2.60, "primary_exchange": "LSE" },
+  { "ticker": "LLOY.L", "name": "Lloyds Banking Group", "sector": "Financials", "currency": "GBX", "weight": 2.20, "primary_exchange": "LSE" },
+  { "ticker": "BARC.L", "name": "Barclays PLC", "sector": "Financials", "currency": "GBX", "weight": 2.15, "primary_exchange": "LSE" },
+  { "ticker": "VOD.L", "name": "Vodafone Group Plc", "sector": "Telecommunications", "currency": "GBX", "weight": 1.45, "primary_exchange": "LSE" },
+  { "ticker": "GLEN.L", "name": "Glencore plc", "sector": "Basic Materials", "currency": "GBX", "weight": 2.40, "primary_exchange": "LSE" },
+  { "ticker": "BA.L", "name": "BAE Systems plc", "sector": "Industrials", "currency": "GBX", "weight": 2.10, "primary_exchange": "LSE" }
+]

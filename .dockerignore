@@ -1,0 +1,15 @@
+node_modules
+dist
+.git
+.gitignore
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache
+.coverage
+.env
+.venv
+venv
+data/storage/*.parquet
+logs/*.log

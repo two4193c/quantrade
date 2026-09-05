@@ -1,0 +1,6 @@
+{
+  "name": "QuantTrade - Algorithmic Trading Platform",
+  "description": "Dockerized quantitative trading platform with FTSE 100 data ingestion, HMM regime detection, multi-engine strategy optimizer, Monte Carlo projections, and paper trading.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
