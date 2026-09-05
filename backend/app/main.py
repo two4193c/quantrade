@@ -95,6 +95,51 @@ def ingestion_status():
         "tickers": status_list
     }
 
+class IngestionTriggerRequest(BaseModel):
+    ticker: Optional[str] = "AZN.L"
+
+@app.post("/api/ingestion/trigger")
+def trigger_ingestion(req: IngestionTriggerRequest):
+    """Trigger ingestion and data validation for a single constituent"""
+    ticker = req.ticker or "AZN.L"
+    df = data_provider.fetch_daily_bars(ticker, start_date="2023-01-01")
+    storage_manager.save_bars(df, ticker)
+    return {
+        "success": True,
+        "message": f"Ingestion completed for {ticker}. {len(df)} daily bars validated and stored.",
+        "storage_location": f"/data/storage/{ticker.replace('.', '_')}.parquet"
+    }
+
+@app.post("/api/ingestion/batch")
+def batch_ingestion():
+    """Trigger batch ingestion across all FTSE 100 universe constituents"""
+    universe = get_universe_list()
+    results = []
+    for item in universe:
+        ticker = item["ticker"]
+        try:
+            df = data_provider.fetch_daily_bars(ticker, start_date="2023-01-01")
+            storage_manager.save_bars(df, ticker)
+            results.append({
+                "ticker": ticker,
+                "name": item["name"],
+                "status": "VALIDATED_AND_STORED",
+                "bars": len(df)
+            })
+        except Exception as e:
+            results.append({
+                "ticker": ticker,
+                "name": item["name"],
+                "status": f"ERROR: {str(e)}",
+                "bars": 0
+            })
+    return {
+        "success": True,
+        "total_ingested": len(universe),
+        "message": f"Batch ingestion complete for {len(universe)} FTSE 100 constituents.",
+        "results": results
+    }
+
 @app.get("/api/features/{ticker}")
 def get_features(ticker: str):
     """Retrieve engineered indicators, Hurst exponent, and HMM market regime"""

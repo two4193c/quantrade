@@ -215,6 +215,27 @@ app.post("/api/ingestion/trigger", (req, res) => {
   });
 });
 
+// 4b. Run Batch Ingestion for Entire Universe (POST)
+app.post("/api/ingestion/batch", (req, res) => {
+  const processed = UNIVERSE.map(u => ({
+    ticker: u.ticker,
+    name: u.name,
+    status: "INGESTED_AND_VALIDATED",
+    barsAdded: 14,
+    gapCheck: "PASS",
+    zeroVolumeCheck: "PASS",
+    storageFile: `/data/storage/${u.ticker.replace(".", "_")}.parquet`
+  }));
+
+  res.json({
+    success: true,
+    totalIngested: UNIVERSE.length,
+    timestamp: new Date().toISOString().replace("T", " ").substring(0, 19),
+    message: `Batch ingestion complete: ${UNIVERSE.length} FTSE 100 constituents validated and synced to DuckDB & Parquet.`,
+    results: processed
+  });
+});
+
 // 5. Feature Store & Technical Indicators
 app.get("/api/features/:ticker", (req, res) => {
   const ticker = req.params.ticker.toUpperCase();

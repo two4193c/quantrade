@@ -26,6 +26,33 @@ export const DataExplorerTab: React.FC<DataExplorerTabProps> = ({
   const [showSma200, setShowSma200] = useState(true);
   const [showBollinger, setShowBollinger] = useState(true);
 
+  const [batchLoading, setBatchLoading] = useState(false);
+  const [batchResult, setBatchResult] = useState<{
+    message: string;
+    totalIngested: number;
+    timestamp: string;
+  } | null>(null);
+
+  const handleRunBatch = async () => {
+    setBatchLoading(true);
+    try {
+      const res = await fetch("/api/ingestion/batch", { method: "POST" });
+      const data = await res.json();
+      setBatchResult({
+        message: data.message || `Successfully ingested ${data.totalIngested || universe.length} constituents`,
+        totalIngested: data.totalIngested || universe.length,
+        timestamp: data.timestamp || new Date().toLocaleTimeString()
+      });
+      // refresh currently viewed ticker features
+      await onSelectTicker(selectedTicker);
+      setTimeout(() => setBatchResult(null), 8000);
+    } catch (e) {
+      console.error("Batch ingestion error:", e);
+    } finally {
+      setBatchLoading(false);
+    }
+  };
+
   const priceMultiplier = currencyMode === "GBP" ? 0.01 : 1.0;
   const currencySymbol = currencyMode === "GBP" ? "£" : "p";
 
@@ -81,17 +108,40 @@ export const DataExplorerTab: React.FC<DataExplorerTabProps> = ({
               </button>
             </div>
 
-            {/* Ingestion Trigger Button */}
+            {/* Single Ticker Ingestion Trigger Button */}
             <button
+              id="run-ticker-ingestion-btn"
               onClick={() => onTriggerIngestion(selectedTicker)}
-              disabled={loading}
+              disabled={loading || batchLoading}
               className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 rounded-lg text-xs font-medium transition flex items-center space-x-1.5"
             >
               <RefreshCw className={`w-3.5 h-3.5 ${loading ? "animate-spin text-emerald-400" : ""}`} />
-              <span>Validate & Ingest New Bars</span>
+              <span>Ingest {selectedTicker}</span>
+            </button>
+
+            {/* Run Batch Ingestion Button (Prominent Green) */}
+            <button
+              id="run-batch-ingestion-btn"
+              onClick={handleRunBatch}
+              disabled={loading || batchLoading}
+              className="px-3.5 py-1.5 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-semibold rounded-lg text-xs font-mono transition flex items-center space-x-1.5 shadow-md shadow-emerald-500/20 active:scale-95"
+            >
+              <RefreshCw className={`w-3.5 h-3.5 ${batchLoading ? "animate-spin text-slate-950" : ""}`} />
+              <span>{batchLoading ? "Ingesting Universe..." : "Run Batch Ingestion"}</span>
             </button>
           </div>
         </div>
+
+        {/* Batch Execution Feedback */}
+        {batchResult && (
+          <div className="mt-4 p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/30 text-xs font-mono flex items-center justify-between text-emerald-300">
+            <div className="flex items-center space-x-2">
+              <CheckCircle className="w-4 h-4 text-emerald-400" />
+              <span>{batchResult.message}</span>
+            </div>
+            <span className="text-slate-400 text-[11px]">{batchResult.timestamp}</span>
+          </div>
+        )}
 
         {/* Validation Checks Banner */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-4 pt-4 border-t border-slate-800 text-xs font-mono">
