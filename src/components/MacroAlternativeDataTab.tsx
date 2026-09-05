@@ -208,6 +208,9 @@ export const MacroAlternativeDataTab: React.FC = () => {
               <span className="text-xs font-mono px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
                 Series {cpihData.series_id}
               </span>
+              <span className="text-[11px] font-mono px-2 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700">
+                Public Open Data (Keyless)
+              </span>
             </div>
             <span className="text-xs font-mono text-slate-400">{cpihData.latest_month} Release</span>
           </div>

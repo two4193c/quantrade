@@ -18,7 +18,7 @@ class Settings(BaseModel):
     TIINGO_API_KEY: str = os.getenv("TIINGO_API_KEY", "")
     FRED_API_KEY: str = os.getenv("FRED_API_KEY", "")
     QUANDL_API_KEY: str = os.getenv("QUANDL_API_KEY", os.getenv("NASDAQ_DATA_LINK_API_KEY", ""))
-    ONS_API_KEY: str = os.getenv("ONS_API_KEY", "")
+    # Note: ONS (Office for National Statistics) & FCA Short Register are public open data (no API key required)
     DEFAULT_PROVIDER: str = "tiingo"
     FALLBACK_PROVIDER: str = "yfinance"
     

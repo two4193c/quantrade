@@ -47,7 +47,7 @@ storage_manager = DuckDBStorageManager(settings.STORAGE_PATH)
 paper_engine = PaperTradingEngine(initial_capital=10000000.0) # £100,000 in GBX pence
 data_provider = YFinanceProvider()
 fred_provider = FredMacroProvider(api_key=settings.FRED_API_KEY)
-ons_provider = OnsCpihProvider(api_key=settings.ONS_API_KEY)
+ons_provider = OnsCpihProvider() # Public ONS Open Data (No API Key Required)
 fca_provider = FcaShortRegisterProvider()
 quandl_provider = QuandlCommodityProvider(api_key=settings.QUANDL_API_KEY)
 
